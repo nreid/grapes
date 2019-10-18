@@ -15,12 +15,14 @@
 module load java
 module load Trimmomatic/0.36
 
-#input/output directories, control files
+#input/output directories, supplementary files
 POOL1=/labs/Wegrzyn/Grapes/data/raw_data/1
 POOL2=/labs/Wegrzyn/Grapes/data/raw_data/2
-mkdir -p ../trimmed_data
-OUTDIR=../trimmed_data
-ADAPT=adapters.fa
+ADAPT=../../../metadata/adapters.fa
+
+mkdir -p ../results/trimmed_data
+OUTDIR=../results/trimmed_data
+
 
 java -jar $Trimmomatic PE \
 $POOL1/Pool1_1.fastq.gz \

@@ -4,7 +4,7 @@
 
 file 'metadata.txt' was written by hand in excel originally. 
 I edited it to make it friendlier, but still must be read in R as:
-`read.table("metadata.txt",header=TRUE,sep="\t",comment.char="",quote="")`
+`read.table("metadata.txt",header=TRUE,sep="\t",comment.char="",quote="",stringsAsFactors=FALSE)`
 
 ## Process pooled data
 
