@@ -11,18 +11,26 @@
 #SBATCH --qos=general
 
 # adapted from Madison Caballero
+	# specified stacks 2.41. 
 
 module load stacks/2.41
 
-# input/output directories
-TRIMDIR=../trimmed_data/
-OUTDIR=demultiplex_output
+#input/output directories, supplementary files
+TRIMDIR=../results/trimmed_data/
+
+# make demultiplexed directory if it doesn't exist
+mkdir -p ../results/demultiplexed_fastqs
+OUTDIR=../results/demultiplexed_fastqs
+
+BARCODES1=../../../metadata/barcodes_Pool1
+BARCODES2=../../../metadata/barcodes_Pool2
+
 
 # pool 1
 process_radtags \
 -1 $TRIMDIR/Pool1_trimmed_1.fastq.gz \
 -2 $TRIMDIR/Pool1_trimmed_2.fastq.gz \
--b barcodes_Pool1 \
+-b $BARCODES1 \
 -o $OUTDIR/ \
 -y fastq \
 -i gzfastq \
@@ -40,7 +48,7 @@ process_radtags \
 process_radtags \
 -1 $TRIMDIR/Pool2_trimmed_1.fastq.gz \
 -2 $TRIMDIR/Pool2_trimmed_2.fastq.gz \
--b barcodes_Pool2 \
+-b $BARCODES2 \
 -o $OUTDIR/ \
 -y fastq \
 -i gzfastq \

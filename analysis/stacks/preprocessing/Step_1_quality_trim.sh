@@ -11,6 +11,7 @@
 #SBATCH --qos=general
 
 # adapted from Madison Caballero
+	# reduced quality trimming stringency to meanQ < 10
 
 module load java
 module load Trimmomatic/0.36
@@ -20,9 +21,11 @@ POOL1=/labs/Wegrzyn/Grapes/data/raw_data/1
 POOL2=/labs/Wegrzyn/Grapes/data/raw_data/2
 ADAPT=../../../metadata/adapters.fa
 
+# make trimmed directory if it doesn't exist
 mkdir -p ../results/trimmed_data
 OUTDIR=../results/trimmed_data
 
+# pool 1
 java -jar $Trimmomatic PE \
 $POOL1/Pool1_R1_.fastq.gz \
 $POOL1/Pool1_R2_.fastq.gz \
@@ -34,7 +37,7 @@ ILLUMINACLIP:$ADAPT:3:30:10 \
 SLIDINGWINDOW:3:10 \
 MINLEN:50 
 
-
+# pool 2
 java -jar $Trimmomatic PE \
 $POOL2/Pool2_R1_.fastq.gz \
 $POOL2/Pool2_R2_.fastq.gz \
