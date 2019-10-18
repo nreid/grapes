@@ -26,10 +26,10 @@ OUTDIR=../results/trimmed_data
 java -jar $Trimmomatic PE \
 $POOL1/Pool1_R1_.fastq.gz \
 $POOL1/Pool1_R2_.fastq.gz \
-Pool1_trimmed_1.fastq.gz \
-unpaired_Pool1_trimmed_1.fastq.gz \
-Pool1_trimmed_2.fastq.gz \
-unpaired_Pool1_trimmed_2.fastq.gz \
+$OUTDIR/Pool1_trimmed_1.fastq.gz \
+$OUTDIR/unpaired_Pool1_trimmed_1.fastq.gz \
+$OUTDIR/Pool1_trimmed_2.fastq.gz \
+$OUTDIR/unpaired_Pool1_trimmed_2.fastq.gz \
 ILLUMINACLIP:$ADAPT:3:30:10 \
 SLIDINGWINDOW:3:10 \
 MINLEN:50 
@@ -38,10 +38,10 @@ MINLEN:50
 java -jar $Trimmomatic PE \
 $POOL2/Pool2_R1_.fastq.gz \
 $POOL2/Pool2_R2_.fastq.gz \
-Pool2_trimmed_1.fastq.gz \
-unpaired_Pool2_trimmed_1.fastq.gz \
-Pool2_trimmed_2.fastq.gz \
-unpaired_Pool2_trimmed_2.fastq.gz \
+$OUTDIR/Pool2_trimmed_1.fastq.gz \
+$OUTDIR/unpaired_Pool2_trimmed_1.fastq.gz \
+$OUTDIR/Pool2_trimmed_2.fastq.gz \
+$OUTDIR/unpaired_Pool2_trimmed_2.fastq.gz \
 ILLUMINACLIP:$ADAPT:3:30:10 \
 SLIDINGWINDOW:3:10 \
 MINLEN:50
