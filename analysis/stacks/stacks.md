@@ -10,3 +10,7 @@ I edited it to make it friendlier, but still must be read in R as:
 
 1. Trimmomatic
 2. stacks: process_radtags
+
+## Reference mapping approach
+
+1. Align to reference genome
