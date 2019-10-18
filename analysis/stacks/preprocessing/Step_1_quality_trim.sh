@@ -23,10 +23,9 @@ ADAPT=../../../metadata/adapters.fa
 mkdir -p ../results/trimmed_data
 OUTDIR=../results/trimmed_data
 
-
 java -jar $Trimmomatic PE \
-$POOL1/Pool1_1.fastq.gz \
-$POOL1/Pool1_2.fastq.gz \
+$POOL1/Pool1_R1.fastq.gz \
+$POOL1/Pool1_R2.fastq.gz \
 Pool1_trimmed_1.fastq.gz \
 unpaired_Pool1_trimmed_1.fastq.gz \
 Pool1_trimmed_2.fastq.gz \
@@ -37,8 +36,8 @@ MINLEN:50
 
 
 java -jar $Trimmomatic PE \
-$POOL2/Pool2_1.fastq.gz \
-$POOL2/Pool2_2.fastq.gz \
+$POOL2/Pool2_R1.fastq.gz \
+$POOL2/Pool2_R2.fastq.gz \
 Pool2_trimmed_1.fastq.gz \
 unpaired_Pool2_trimmed_1.fastq.gz \
 Pool2_trimmed_2.fastq.gz \
