@@ -5,7 +5,7 @@
 #SBATCH --mail-user=noah.reid@uconn.edu
 #SBATCH --mail-type=ALL
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=20
 #SBATCH --mem=100G
 #SBATCH --partition=general
 #SBATCH --qos=general
@@ -27,6 +27,7 @@ OUTDIR=../results/trimmed_data
 
 # pool 1
 java -jar $Trimmomatic PE \
+-threads 20 \
 $POOL1/Pool1_R1_.fastq.gz \
 $POOL1/Pool1_R2_.fastq.gz \
 $OUTDIR/Pool1_trimmed_1.fastq.gz \
@@ -39,6 +40,7 @@ MINLEN:50
 
 # pool 2
 java -jar $Trimmomatic PE \
+-threads 20 \
 $POOL2/Pool2_R1_.fastq.gz \
 $POOL2/Pool2_R2_.fastq.gz \
 $OUTDIR/Pool2_trimmed_1.fastq.gz \
