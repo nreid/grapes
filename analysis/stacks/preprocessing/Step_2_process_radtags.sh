@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=process_radtags
-#SBATCH -o process_radtags-%j.o
-#SBATCH -e process_radtags-%j.e
+#SBATCH -o process_radtags-%j.out
+#SBATCH -e process_radtags-%j.err
 #SBATCH --mail-user=noah.reid@uconn.edu
 #SBATCH --mail-type=ALL
 #SBATCH --ntasks=1

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=trimmomatic
-#SBATCH -o trimmomatic-%j.o
-#SBATCH -e trimmomatic-%j.e
+#SBATCH -o trimmomatic-%j.out
+#SBATCH -e trimmomatic-%j.err
 #SBATCH --mail-user=noah.reid@uconn.edu
 #SBATCH --mail-type=ALL
 #SBATCH --ntasks=1
