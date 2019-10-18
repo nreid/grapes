@@ -13,4 +13,6 @@ I edited it to make it friendlier, but still must be read in R as:
 
 ## Reference mapping approach
 
+Must have bwa indexed genome in repository root dir `genome`. 
+
 1. Align to reference genome

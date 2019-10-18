@@ -12,6 +12,7 @@
 
 # adapted from Madison Caballero
 	# specified stacks 2.41. 
+	# output set to gzfastq
 
 module load stacks/2.41
 
@@ -32,7 +33,7 @@ process_radtags \
 -2 $TRIMDIR/Pool1_trimmed_2.fastq.gz \
 -b $BARCODES1 \
 -o $OUTDIR/ \
--y fastq \
+-y gzfastq \
 -i gzfastq \
 --inline_null \
 -e sbfI \
@@ -50,7 +51,7 @@ process_radtags \
 -2 $TRIMDIR/Pool2_trimmed_2.fastq.gz \
 -b $BARCODES2 \
 -o $OUTDIR/ \
--y fastq \
+-y gzfastq \
 -i gzfastq \
 --inline_null \
 -e sbfI \
