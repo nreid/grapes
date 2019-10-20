@@ -23,8 +23,8 @@ TRIMDIR=../results/trimmed_data/
 mkdir -p ../results/demultiplexed_fastqs
 OUTDIR=../results/demultiplexed_fastqs
 
-BARCODES1=../../../metadata/stacks_barcodes_Pool1
-BARCODES2=../../../metadata/stacks_barcodes_Pool2
+BARCODES1=../../../metadata/stacks_barcodes_Pool1.txt
+BARCODES2=../../../metadata/stacks_barcodes_Pool2.txt
 
 
 # pool 1
