@@ -66,8 +66,9 @@ while(length(line <- readLines(f,n=1)) > 0) {
 						cutsites <- cutsites + basepos
 						# zero-index start position for bed format
 						cutsites[,1] <- cutsites[,1] - 1
-						cutsites <- cutsites[order(cutsites[,1])]
+						cutsites <- cutsites[order(cutsites[,1]),]
 						cutsites <- cbind(sn,cutsites)
+
 						write.table(cutsites,stdout(),row.names=FALSE,col.names=FALSE,sep="\t")
 
 						baseseq <- line
