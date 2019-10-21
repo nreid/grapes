@@ -15,7 +15,7 @@ target <- c("CCTGCAGG")
 tl <- nchar(target)
 
 
-
+bl <- 0
 basepos <- 0
 baseseq <- c()
 inseq <- FALSE
@@ -25,6 +25,8 @@ ln <- 1
 f <- file("stdin")
 open(f)
 while(length(line <- readLines(f,n=1)) > 0) {
+
+	# write(c(inseq, bl,basepos),stderr())
 
 	if(grepl("^#",line)){inseq <- FALSE; ln <- ln + 1; next()}
 	if(grepl("^$",line)){inseq <- FALSE; ln <- ln + 1; next()}
@@ -46,18 +48,18 @@ while(length(line <- readLines(f,n=1)) > 0) {
 		cutsites <- data.frame(cutsites)
 
 		if(dim(cutsites)[1] == 0){
+			basepos <- basepos + bl
 			baseseq <- line
 			bl <- nchar(baseseq)
-			basepos <- basepos + bl
 			ln <- ln + 1
 			next()
 			}
 			else{
-				cutsites <- cutsites[cutsites[,1] > bl - tl + 1,]
+				cutsites <- cutsites[cutsites[,1] > bl - tl[1] + 1,]
 				if(dim(cutsites)[1] == 0){
+					basepos <- basepos + bl
 					baseseq <- line
 					bl <- nchar(baseseq)
-					basepos <- basepos + bl
 					ln <- ln + 1
 					next()
 					}
@@ -71,9 +73,9 @@ while(length(line <- readLines(f,n=1)) > 0) {
 
 						write.table(cutsites,stdout(),row.names=FALSE,col.names=FALSE,sep="\t")
 
+						basepos <- basepos + bl
 						baseseq <- line
 						bl <- nchar(baseseq)
-						basepos <- basepos + bl
 						ln <- ln + 1
 						}
 					}
