@@ -13,7 +13,7 @@
 
 
 module load subread/1.6.0
-module load samtools/samtools/1.7
+module load samtools/1.7
 module load R/3.6.0
 module load bedtools/2.27.1
 
