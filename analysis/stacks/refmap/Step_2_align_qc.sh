@@ -23,10 +23,10 @@ module load bedtools/2.27.1
 find ../results/aligned_ref/ -name "*bam" >../results/aligned_ref/bams.list
 
 # make the bam indexes
-find ../results/aligned_ref/ -name "*bam" | xargs -I {} samtools index {}
+find ../results/aligned_ref/ -name "*bam" | xargs -P 12 -I {} samtools index {}
 
 # samtools bam statistics
-find ../results/aligned_ref/ -name "*bam" | xargs -I {} samtools stats {}
+find ../results/aligned_ref/ -name "*bam" | xargs -P 12 -I {} samtools stats {}
 
 
 # find all the restriction sites in the Vvinifera genome assembly
