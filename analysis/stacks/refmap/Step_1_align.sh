@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=bwa
-#SBATCH -o bwa_%x_%A_%a.out
-#SBATCH -e bwa_%x_%A_%a.err
+#SBATCH -o %x_%A_%a.out
+#SBATCH -e %x_%A_%a.err
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=noah.reid@uconn.edu
 #SBATCH -n 1
