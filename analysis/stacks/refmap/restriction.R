@@ -71,7 +71,7 @@ while(length(line <- readLines(f,n=1)) > 0) {
 						cutsites <- cutsites[order(cutsites[,1]),]
 						cutsites <- cbind(sn,cutsites)
 
-						write.table(cutsites,stdout(),row.names=FALSE,col.names=FALSE,sep="\t")
+						write.table(cutsites,stdout(),row.names=FALSE,col.names=FALSE,sep="\t",quote=FALSE)
 
 						basepos <- basepos + bl
 						baseseq <- line
