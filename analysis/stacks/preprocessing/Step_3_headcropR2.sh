@@ -26,20 +26,22 @@ module load Trimmomatic/0.36
 # input directory
 INDIR=../results/demultiplexed_fastqs
 
-# if alignment dir doesn't exist, make it
+# if headcrop dir doesn't exist, make it
 mkdir -p ../results/demultiplexed_fastqs/headcrop
 OUTDIR=../results/demultiplexed_fastqs/headcrop
 
 # create an array variable containing the file names
 FILES=($(ls -1 $INDIR/*.2.fq.gz | grep -v "rem.2"))
 
+# define infile and outfiles
 INFILE=${FILES[$SLURM_ARRAY_TASK_ID]}
 OUTFILE=$(echo $INFILE | sed 's/.*\///')
 
+# run trimmomatic
 java -jar $Trimmomatic SE \
 -threads 4 \
 $INFILE \
 $OUTDIR/$OUTFILE \
 HEADCROP:1
 
-# mv $OUTDIR/$OUTFILE $INFILE
+mv $OUTDIR/$OUTFILE $INFILE

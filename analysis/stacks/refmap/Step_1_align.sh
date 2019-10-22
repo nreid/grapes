@@ -54,6 +54,8 @@ samblaster | \
 samtools view -S -h -u - | \
 samtools sort -T /scratch/$SAM - >$OUTDIR/${SAM}.bam
 
+samtools index $OUTDIR/${SAM}.bam
+
 echo Files $FQ1 and $FQ2 were aligned by task number $SLURM_ARRAY_TASK_ID on $(date)
 
 
