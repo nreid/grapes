@@ -22,8 +22,8 @@ module load bedtools/2.27.1
 # make a list of bam files
 find ../results/aligned_ref/ -name "*bam" >../results/aligned_ref/bams.list
 
-# make the bam indexes
-find ../results/aligned_ref/ -name "*bam" | xargs -P 12 -I {} samtools index {}
+# # make the bam indexes
+# find ../results/aligned_ref/ -name "*bam" | xargs -P 12 -I {} samtools index {}
 
 # make an output directory
 mkdir -p ../results/align_stats
