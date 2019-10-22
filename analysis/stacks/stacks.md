@@ -16,3 +16,8 @@ I edited it to make it friendlier, but still must be read in R as:
 Must have bwa indexed genome in repository root dir `genome`. 
 
 1. Align to reference genome
+2. Explore results of mapping
+
+### Variant calling
+
+1. Inserted a freebayes variant call in here. Not stacks, but...
