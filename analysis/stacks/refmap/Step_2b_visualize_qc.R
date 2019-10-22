@@ -1,5 +1,13 @@
 library(tidyverse)
 
+# this script is used to explore coverage among
+# rad sites and among individuals. 
+
+# in the end, a bed file is output giving a set of RAD sites
+# to call variants on. 
+
+# assumes you're running the script interactively from the directory you found it in. 
+
 # read in metadata table
 meta <- read.table("../../../metadata/metadata.txt",stringsAsFactors=FALSE,sep="\t",comment.char="",header=TRUE)
 rownames(meta) <- meta[,1]
@@ -7,7 +15,7 @@ rownames(meta) <- meta[,1]
 # featurecounts fragments mapping within 2kb of restriction sites
 co <- read.table("vvinifer_counts.txt",stringsAsFactors=FALSE,header=TRUE)
 colnames(co) <- gsub(".bam","",colnames(co)) %>% gsub(".*\\.","",.)
-# counts only
+# matrix with counts only
 cot <- co[,-(1:6)]
 cot <- as.matrix(cot)
 # scaled by sum of mapped fragments
@@ -35,8 +43,11 @@ hist(sitecounts_l,breaks=50)
 plot(sort(unlist(sn[1,])),ylab="raw sequences")
 abline(h=1e6)
 
-# use 1M sequences / individual as a cutoff. 
-keepi <- unlist(sn[1,]) > 1e6
+# the coverage distribution is so screwed up
+# that I'll use # of missing rad sites < 1600 as a cutoff
+# instead of total coverage. 
+# 20 individuals retained
+keepi <- colSums(cot==0) < 1600
 
 # pool 1 and 2 individuals
 p1 <- grepl("Pool1",colnames(cot))
@@ -46,25 +57,39 @@ p2 <- grepl("Pool2",colnames(cot))
 par(mfrow=c(1,3))
 
 (rowSums(cot[,keepi])+1) %>% log(.,10) %>% hist(.,breaks=50,main="fragments per RAD site, log10")
-abline(v=log(c(1000,80000),10))
 (rowSums(cot[,keepi & p1])+1) %>% log(.,10) %>% hist(.,breaks=50,main="fragments per RAD site, log10")
-abline(v=log(c(1000,40000),10))
 (rowSums(cot[,keepi & p2])+1) %>% log(.,10) %>% hist(.,breaks=50,main="fragments per RAD site, log10")
-abline(v=log(c(1000,40000),10))
 
 # fragments per site for each pool in a scatter plot
 	# many sites in pool1 not sequenced, or barely sequenced in pool2
 	# these sites may contribute heavily to pool bias. 
-	# keep sites within the box. 
 plot(log(rowMeans(cot[,keepi & p2]+1),10),log(rowMeans(cot[,keepi & p1]+1),10),ylab="mean coverage per RAD site - pool 1",xlab="mean coverage per RAD site - pool 2")
 abline(
 	h=c(2,4),
-	v=c(1.5,4))
+	v=c(0.5,4))
 
-keepl <- log(rowMeans(cot[,keepi & p2]+1),10) > 1.5 & 
-		 log(rowMeans(cot[,keepi & p2]+1),10) < 4 &
-		 log(rowMeans(cot[,keepi & p1]+1),10) > 2 &
-		 log(rowMeans(cot[,keepi & p1]+1),10) < 4
+# number non-missing sites for each pool in a scatter plot
+	#
+	# 
+plot(jitter(rowSums(cot[,keepi & p2]>0)),jitter(rowSums(cot[,keepi & p1]>0)),ylab="mean coverage per RAD site - pool 1",xlab="mean coverage per RAD site - pool 2",pch=20,col=rgb(0,0,0,.5))
+abline(
+	h=c(8.5),
+	v=c(5.5))
+
+
+keepl <- rowSums(cot[,keepi & p2] > 0) > 4 & 
+		 rowSums(cot[,keepi & p1] > 0) > 8
+
+
+# keepl <- log(rowMeans(cot[,keepi & p2]+1),10) > 0.25 & 
+# 		 log(rowMeans(cot[,keepi & p2]+1),10) < 4 &
+# 		 log(rowMeans(cot[,keepi & p1]+1),10) > 2 &
+# 		 log(rowMeans(cot[,keepi & p1]+1),10) < 4
+
+sum(keepl)
+rowSums(cot[keepl,keepi]==0) %>% table() %>% plot()
+rowSums(cot[keepl,keepi]==0) %>% median()
+
 
 # replot
 plot(log(rowMeans(cot[keepl,keepi & p2]+1),10),log(rowMeans(cot[keepl,keepi & p1]+1),10),ylab="mean coverage per RAD site - pool 1",xlab="mean coverage per RAD site - pool 2")
@@ -74,8 +99,8 @@ rowSums(cot[keepl,keepi]) %>% log(.,10) %>% hist(.,breaks=50)
 rowSums(cot[keepl,keepi]) %>% hist(.,breaks=50)
 
 # get rid of upper tail of coverage. 
-	# after this step, 1363 rad sites retained
-keepl <- keepl & rowSums(cot[,keepi]) < 75000
+	# after this step, 1185 rad sites retained
+keepl <- keepl & rowSums(cot[,keepi]) < 100000
 
 
 # histogram of missing data per site
@@ -93,18 +118,18 @@ colSums(cot[keepl,keepi]==0) %>% plot(.,col=factor(substring(names(which(keepi))
 	# not a strong correlation. 
 plot(unlist(sn[1,keepi]),colSums(cot[keepl,keepi]==0),col=factor(substring(names(which(keepi)),1,5)))
 
-# throw out individuals with more than 600 missing sites
-	# only 16 individuals remain. 
-keepi <- keepi & colSums(cot[keepl,]==0) < 600
-
 # mds plot on scaled coverage
 md <- (cots[keepl,keepi] + 1) %>% log() %>% t() %>% dist()
 mds <- cmdscale(md)
 plot(mds,col=factor(substring(rownames(mds),1,5)))
 
-# variance in scaled coverage is way higher in pool 2
-apply(cots[keepl,keepi],MAR=2,FUN=var) %>% plot()
+# write list of samples to retain
+cat(names(which(keepi)),sep="\n",file="../../../metadata/retained_samples.txt")
 
+# write bed file with intervals to variant call on
+bedout <- co[keepl,2:4]
+# bed start is zero-indexed
+bedout[,2] <- bedout[,2]-1
 
-
+write.table(bedout,file="../../../metadata/targets.bed",col.names=FALSE,quote=FALSE,row.names=FALSE,sep="\t")
 
