@@ -32,7 +32,7 @@ OUTDIR=../results/freebayes
 find ../results/aligned_ref/ -name "*bam" >../results/aligned_ref/bams.list
 
 # set a variable for the reference genome location
-GEN=../../../genome/Vvinifera_145_Genoscope.12X
+GEN=../../../genome/Vvinifera_145_Genoscope.12X.fa
 
 # set a variable for the rad sites targeted
 TARGETS=../../../metadata/targets.bed
@@ -45,8 +45,8 @@ bamtools merge -list $BAMLIST | \
 bamtools filter -in stdin -mapQuality ">30" -isProperPair true | \
 bedtools intersect -a stdin -b $TARGETS -nonamecheck | \
 freebayes -f $GEN --stdin | \
-bgzip -c >$OUTDIR/vvinifer_fb.vcf.gz
+bgzip -c >$OUTDIR/vvinifera_fb.vcf.gz
 
-tabix -p vcf $OUTDIR/vvinifer_fb.vcf.gz
+tabix -p vcf $OUTDIR/vvinifera_fb.vcf.gz
 
 date
