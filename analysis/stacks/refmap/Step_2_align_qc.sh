@@ -25,9 +25,29 @@ find ../results/aligned_ref/ -name "*bam" >../results/aligned_ref/bams.list
 # make the bam indexes
 find ../results/aligned_ref/ -name "*bam" | xargs -P 12 -I {} samtools index {}
 
-# samtools bam statistics
-find ../results/aligned_ref/ -name "*bam" | xargs -P 12 -I {} samtools stats {}
+# make an output directory
+mkdir -p ../results/align_stats
 
+# samtools bam statistics
+for file in $(find ../results/aligned_ref/ -name "*bam"); 
+do samtools stats $file >${file}.stats
+echo $file;
+done
+
+mv ../results/aligned_ref/*stats ../results/align_stats
+
+# put the basic stats all in one file. 
+grep ^SN ../results/align_stats/Pool1_BC01.bam.stats | cut -f 2 > ../results/align_stats/SN.txt
+for file in $(find ../results/align_stats/ -name "Pool*stats" | sort)
+do paste ../results/align_stats/SN.txt <(grep ^SN $file | cut -f 3) > ../results/align_stats/SN2.txt && \
+	mv ../results/align_stats/SN2.txt ../results/align_stats/SN.txt
+done
+
+# add a header
+find ../results/align_stats/ -name "Pool*stats" | sort | sed 's/.bam.*//' | sed 's/.*\///' | tr "\n" "\t" | sed 's/\t$/\n/'>../results/align_stats/SN2.txt
+cat \n >>../results/align_stats/SN2.txt
+cat ../results/align_stats/SN.txt >>../results/align_stats/SN2.txt && \
+	mv ../results/align_stats/SN2.txt ../results/align_stats/SN.txt
 
 # find all the restriction sites in the Vvinifera genome assembly
 cat ../../../genome/Vvinifera_145_Genoscope.12X.fa | \
@@ -48,7 +68,6 @@ cat ../../../metadata/vvinifera_int.bed | \
 awk '{OFS="\t"}{s=$2+1}{print NR,$1,s,$3,"+"}' >>../../../metadata/vvinifera_int.saf
 
 # run featurecounts
-mkdir -p ../results/align_stats
 featureCounts \
 -a ../../../metadata/vvinifera_int.saf \
 -o ../results/align_stats/vvinifer_counts.txt \
@@ -59,6 +78,7 @@ featureCounts \
 -T 12 \
 $(cat ../results/aligned_ref/bams.list | tr "\n" " ")
 
+###############
 
 
 
