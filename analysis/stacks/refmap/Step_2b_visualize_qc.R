@@ -13,7 +13,7 @@ meta <- read.table("../../../metadata/metadata.txt",stringsAsFactors=FALSE,sep="
 rownames(meta) <- meta[,1]
 
 # featurecounts fragments mapping within 2kb of restriction sites
-co <- read.table("vvinifer_counts.txt",stringsAsFactors=FALSE,header=TRUE)
+co <- read.table("../results/align_stats/vvinifer_counts.txt",stringsAsFactors=FALSE,header=TRUE)
 colnames(co) <- gsub(".bam","",colnames(co)) %>% gsub(".*\\.","",.)
 # matrix with counts only
 cot <- co[,-(1:6)]
@@ -22,11 +22,11 @@ cot <- as.matrix(cot)
 cots <- apply(cot,MAR=2,FUN=function(x){x/sum(x)})
 
 # featurecounts summary
-ss <- read.table("vvinifer_counts.txt.summary",stringsAsFactors=FALSE,header=TRUE,row.names=1)
+ss <- read.table("../results/align_stats/vvinifer_counts.txt.summary",stringsAsFactors=FALSE,header=TRUE,row.names=1)
 colnames(ss) <- gsub(".bam","",colnames(ss)) %>% gsub(".*\\.","",.)
 
 # samtools stats SN statistics
-sn <- read.table("SN.txt",stringsAsFactors=FALSE,sep="\t",header=TRUE)
+sn <- read.table("../results/align_stats/SN.txt",stringsAsFactors=FALSE,sep="\t",header=TRUE)
 
 # make sure cot, ss, meta are in the same order as sn:
 ss <- ss[,colnames(sn)]
@@ -37,6 +37,7 @@ sitecounts <- rowSums(co[,-(1:6)])
 sitecounts_l <- rowSums(co[,-(1:6)]) %>% log(.,10)
 hist(sitecounts,breaks=500,xlim=c(0,100000))
 hist(sitecounts_l,breaks=50)
+
 
 # plot of raw sequences per sample
 # 1M read cutoff
@@ -52,6 +53,37 @@ keepi <- colSums(cot==0) < 1600
 # pool 1 and 2 individuals
 p1 <- grepl("Pool1",colnames(cot))
 p2 <- grepl("Pool2",colnames(cot))
+
+
+# pooling is highly unequal. 
+	# to examine this, calculate the
+	# effective number of samples
+	# per https://en.wikipedia.org/wiki/Diversity_index
+	# maybe not perfectly relevant to downstream analyses, 
+	# but a good measure of inequality of pooling. 
+
+
+# p is a vector of proportions
+# q is the hill number order
+qD <- function(p,q){
+
+	if(q == 1){
+		out <- exp(-sum(p * log(p)))
+	}
+	if(q > 1){
+		out <- (sum(p^q))^(1/(1-q))
+	}
+
+	return(out)
+}
+
+# effectively, there are only 11.5 samples in pool 1
+qD(unlist(sn[1,p1]/sum(sn[1,p1])),1)
+
+# effectively, there are only 18 samples in pool 2
+qD(unlist(sn[1,p2]/sum(sn[1,p2])),1)
+
+
 
 # histogram of total fragments per site
 par(mfrow=c(1,3))
