@@ -165,3 +165,12 @@ bedout[,2] <- bedout[,2]-1
 
 write.table(bedout,file="../../../metadata/targets.bed",col.names=FALSE,quote=FALSE,row.names=FALSE,sep="\t")
 
+
+par(mfrow=c(1,3))
+ord <- order(unlist(sn[1,]))
+plot(unlist(sn[1,])[ord],ylab="raw sequences",col=factor(gsub("_.*","",colnames(sn))[ord]))
+abline(h=1e6)
+plot(unlist(sn[12,])[ord],col=factor(gsub("_.*","",colnames(sn))[ord]),ylab="reads duplicated")
+plot(unlist(sn[26,])[ord],col=factor(gsub("_.*","",colnames(sn))[ord]),ylab="insert size")
+
+plot(unlist(sn[1,])[ord]-unlist(sn[12,])[ord])
